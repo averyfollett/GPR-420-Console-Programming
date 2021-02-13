@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "FPSMiniCubeActor.h"
 #include "GameFramework/Actor.h"
 #include "FPSCubeActor.generated.h"
 
@@ -25,8 +27,8 @@ protected:
 	UPROPERTY()
 	UStaticMesh* CubeMesh;
 
-	UPROPERTY()
-	UMaterial* CubeMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AFPSMiniCubeActor> MiniCubeActor;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

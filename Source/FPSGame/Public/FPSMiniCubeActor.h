@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ParticleDefinitions.h"
 #include "FPSMiniCubeActor.generated.h"
 
 UCLASS()
@@ -25,8 +26,8 @@ protected:
 	UPROPERTY()
 	UStaticMesh* CubeMesh;
 
-	UPROPERTY()
-	UMaterial* CubeMaterial;
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* Explosion;
 
 	UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

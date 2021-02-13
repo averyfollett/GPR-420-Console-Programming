@@ -13,11 +13,8 @@ AFPSCubeActor::AFPSCubeActor()
 
 	CubeMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'")).Object;
 
-	CubeMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Environment/M_Cube.M_Cube'")).Object;
-
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetStaticMesh(CubeMesh);
-	MeshComp->SetMaterial(0, CubeMaterial);
 	MeshComp->SetSimulatePhysics(true);
 	MeshComp->OnComponentHit.AddDynamic(this, &AFPSCubeActor::OnHit);
     RootComponent = MeshComp;
