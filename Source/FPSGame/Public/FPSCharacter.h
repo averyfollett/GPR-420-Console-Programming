@@ -42,6 +42,9 @@ public:
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category="Projectile")
 	TSubclassOf<AFPSProjectile> ProjectileClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Projectile")
+    TSubclassOf<AFPSProjectile> SpecialProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly, Category="Bombs")
 	TSubclassOf<AFPSBombActor> BombClass;
