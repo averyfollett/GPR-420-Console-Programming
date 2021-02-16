@@ -68,11 +68,19 @@ protected:
 
 	bool bSpecialActive = false;
 
+	bool bSpecialFireAvailable = true;
+
 	void SetSpecialActive();
 
 	void SetSpecialInactive();
 
+	void SetSpecialAvailable();
+
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+
+	FTimerHandle SpecialFireTimerHandle;
+
+	float SpecialFireTime = 3.0f;
 
 public:
 	/** Returns Mesh1P subobject **/

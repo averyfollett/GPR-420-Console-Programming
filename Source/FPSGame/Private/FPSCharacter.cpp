@@ -38,7 +38,6 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
 	PlayerInputComponent->BindAction("ActivateProjectile", IE_Pressed, this, &AFPSCharacter::SetSpecialActive);
-	PlayerInputComponent->BindAction("ActivateProjectile", IE_Released, this, &AFPSCharacter::SetSpecialInactive);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
@@ -78,6 +77,8 @@ void AFPSCharacter::Fire()
 
 		// spawn the projectile at the muzzle
 		GetWorld()->SpawnActor<AFPSProjectile>(SpecialProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+
+		SetSpecialInactive();
 	}
 
 	// try and play the sound if specified
@@ -120,10 +121,25 @@ void AFPSCharacter::MoveRight(const float Val)
 
 void AFPSCharacter::SetSpecialActive()
 {
-	bSpecialActive = true;
+	if (bSpecialFireAvailable)
+	{
+		bSpecialActive = true;
+		GetWorld()->GetTimerManager().SetTimer(SpecialFireTimerHandle, this, &AFPSCharacter::SetSpecialAvailable, SpecialFireTime, false);
+		UE_LOG(LogTemp, Warning, TEXT("Special active and timer set"));
+	}
 }
 
 void AFPSCharacter::SetSpecialInactive()
 {
 	bSpecialActive = false;
+	bSpecialFireAvailable = false;
+
+	UE_LOG(LogTemp, Warning, TEXT("Special not available"));
+}
+
+void AFPSCharacter::SetSpecialAvailable()
+{
+	bSpecialFireAvailable = true;
+	GetWorld()->GetTimerManager().ClearTimer(SpecialFireTimerHandle);
+	UE_LOG(LogTemp, Warning, TEXT("Special available and timer reset"));
 }

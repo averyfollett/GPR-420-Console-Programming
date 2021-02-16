@@ -4,6 +4,7 @@
 #include "FPSCubeActor.h"
 
 #include "FPSMiniCubeActor.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFPSCubeActor::AFPSCubeActor()
@@ -30,13 +31,36 @@ void AFPSCubeActor::BeginPlay()
 void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-	const FVector Location = GetActorLocation();
-	const FRotator Rotation = GetActorRotation();
-	const FActorSpawnParameters SpawnParameters;
-	GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
-	GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(-1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
-	GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(0.0f, 1.0f, 0.0f), Rotation, SpawnParameters);
-	GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(0.0f, -1.0f, 0.0f), Rotation, SpawnParameters);
+	if (OtherActor->ActorHasTag("Special"))
+	{
+		TArray<FOverlapResult> OutOverlaps;
+	
+		FCollisionObjectQueryParams QueryParams;
+		QueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+		QueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
+	
+		FCollisionShape CollShape;
+		CollShape.SetSphere(500.0f);
+	
+		GetWorld()->OverlapMultiByObjectType(OutOverlaps, GetActorLocation(), FQuat::Identity, QueryParams, CollShape);
+
+		for (FOverlapResult Result : OutOverlaps)
+		{
+			AActor* Overlap = Result.GetActor();
+
+			Overlap->Destroy();
+		}
+	}
+	else
+	{
+		const FVector Location = GetActorLocation();
+		const FRotator Rotation = GetActorRotation();
+		const FActorSpawnParameters SpawnParameters;
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(-1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(0.0f, 1.0f, 0.0f), Rotation, SpawnParameters);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(0.0f, -1.0f, 0.0f), Rotation, SpawnParameters);
+	}
 	
 	Destroy();
 }
