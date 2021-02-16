@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "FPSBombActor.h"
 #include "GameFramework/Character.h"
 #include "FPSCharacter.generated.h"
@@ -16,9 +15,8 @@ class USoundBase;
 class UAnimSequence;
 class AFPSBombActor;
 
-
 UCLASS()
-class AFPSCharacter : public ACharacter
+class AFPSCharacter final : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -68,7 +66,11 @@ protected:
 	/** Handles strafing movement, left and right */
 	void MoveRight(float Val);
 
-	void SpawnBomb();
+	bool bSpecialActive = false;
+
+	void SetSpecialActive();
+
+	void SetSpecialInactive();
 
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 

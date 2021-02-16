@@ -7,8 +7,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimSequence.h"
-#include "FPSBombActor.h"
-
 
 AFPSCharacter::AFPSCharacter()
 {
@@ -39,7 +37,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
-	PlayerInputComponent->BindAction("SpawnBomb", IE_Pressed, this, &AFPSCharacter::SpawnBomb);
+	PlayerInputComponent->BindAction("ActivateProjectile", IE_Pressed, this, &AFPSCharacter::SetSpecialActive);
+	PlayerInputComponent->BindAction("ActivateProjectile", IE_Released, this, &AFPSCharacter::SetSpecialInactive);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
@@ -52,12 +51,12 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void AFPSCharacter::Fire()
 {
 	// try and fire a projectile
-	if (ProjectileClass)
+	if (!bSpecialActive && ProjectileClass)
 	{
 		// Grabs location from the mesh that must have a socket called "Muzzle" in his skeleton
-		FVector MuzzleLocation = GunMeshComponent->GetSocketLocation("Muzzle");
+		const FVector MuzzleLocation = GunMeshComponent->GetSocketLocation("Muzzle");
 		// Use controller rotation which is our view direction in first person
-		FRotator MuzzleRotation = GetControlRotation();
+		const FRotator MuzzleRotation = GetControlRotation();
 
 		//Set Spawn Collision Handling Override
 		FActorSpawnParameters ActorSpawnParams;
@@ -65,6 +64,20 @@ void AFPSCharacter::Fire()
 
 		// spawn the projectile at the muzzle
 		GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+	}
+	else if (bSpecialActive && SpecialProjectileClass)
+	{
+		// Grabs location from the mesh that must have a socket called "Muzzle" in his skeleton
+		const FVector MuzzleLocation = GunMeshComponent->GetSocketLocation("Muzzle");
+		// Use controller rotation which is our view direction in first person
+		const FRotator MuzzleRotation = GetControlRotation();
+
+		//Set Spawn Collision Handling Override
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		// spawn the projectile at the muzzle
+		GetWorld()->SpawnActor<AFPSProjectile>(SpecialProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
 	}
 
 	// try and play the sound if specified
@@ -86,26 +99,31 @@ void AFPSCharacter::Fire()
 }
 
 
-void AFPSCharacter::MoveForward(float Value)
+void AFPSCharacter::MoveForward(const float Val)
 {
-	if (Value != 0.0f)
+	if (Val != 0.0f)
 	{
 		// add movement in that direction
-		AddMovementInput(GetActorForwardVector(), Value);
+		AddMovementInput(GetActorForwardVector(), Val);
 	}
 }
 
 
-void AFPSCharacter::MoveRight(float Value)
+void AFPSCharacter::MoveRight(const float Val)
 {
-	if (Value != 0.0f)
+	if (Val != 0.0f)
 	{
 		// add movement in that direction
-		AddMovementInput(GetActorRightVector(), Value);
+		AddMovementInput(GetActorRightVector(), Val);
 	}
 }
 
-void AFPSCharacter::SpawnBomb()
+void AFPSCharacter::SetSpecialActive()
 {
-	AFPSBombActor* MyBomb = GetWorld()->SpawnActor<AFPSBombActor>(BombClass, GetActorLocation(), GetActorRotation());
+	bSpecialActive = true;
+}
+
+void AFPSCharacter::SetSpecialInactive()
+{
+	bSpecialActive = false;
 }
