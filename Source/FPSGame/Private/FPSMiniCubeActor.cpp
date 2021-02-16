@@ -30,6 +30,7 @@ void AFPSMiniCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 	FVector NormalImpulse, const FHitResult& Hit)
 {
 	UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, GetActorLocation());
+
 	
 	Destroy();
 }

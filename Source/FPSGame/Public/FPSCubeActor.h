@@ -30,6 +30,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AFPSMiniCubeActor> MiniCubeActor;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Mini Cube")
+	TSubclassOf<AFPSMiniCubeActor> MiniCubeClass;
+
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 

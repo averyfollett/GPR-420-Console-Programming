@@ -26,8 +26,10 @@ protected:
 	UPROPERTY()
 	UStaticMesh* CubeMesh;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	UParticleSystem* Explosion;
+
+
 
 	UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

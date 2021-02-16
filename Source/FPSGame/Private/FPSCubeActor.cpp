@@ -56,10 +56,12 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		const FVector Location = GetActorLocation();
 		const FRotator Rotation = GetActorRotation();
 		const FActorSpawnParameters SpawnParameters;
-		GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
-		GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(-1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
-		GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(0.0f, 1.0f, 0.0f), Rotation, SpawnParameters);
-		GetWorld()->SpawnActor<AFPSMiniCubeActor>(Location + FVector(0.0f, -1.0f, 0.0f), Rotation, SpawnParameters);
+
+		// GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(-1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(0.0f, 1.0f, 0.0f), Rotation, SpawnParameters);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(0.0f, -1.0f, 0.0f), Rotation, SpawnParameters);
 	}
 	
 	Destroy();
