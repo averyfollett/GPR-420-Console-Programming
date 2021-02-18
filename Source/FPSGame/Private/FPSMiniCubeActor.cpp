@@ -50,6 +50,8 @@ void AFPSMiniCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		{
 			AActor* Overlap = Result.GetActor();
 
+			UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, Overlap->GetActorLocation());
+
 			Overlap->Destroy();
 		}
 	}

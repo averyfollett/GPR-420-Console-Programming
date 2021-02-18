@@ -52,8 +52,13 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		{
 			AActor* Overlap = Result.GetActor();
 
+			
+			UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, Overlap->GetActorLocation());
+
 			Overlap->Destroy();
 		}
+
+		UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, GetActorLocation());
 	}
 	else
 	{
