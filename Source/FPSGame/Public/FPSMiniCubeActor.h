@@ -26,11 +26,11 @@ protected:
 	UPROPERTY()
 	UStaticMesh* CubeMesh;
 
+	//Effect to be spawned when this object is destroyed
 	UPROPERTY(EditDefaultsOnly)
 	UParticleSystem* Explosion;
 
-
-
+	//When hit destroy this object and spawn explosion
 	UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 

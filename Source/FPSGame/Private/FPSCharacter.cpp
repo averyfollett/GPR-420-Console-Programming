@@ -131,6 +131,7 @@ void AFPSCharacter::SetSpecialActive()
 
 void AFPSCharacter::SetSpecialInactive()
 {
+	//Set special attacks off. Called after effectr is used
 	bSpecialActive = false;
 	bSpecialFireAvailable = false;
 

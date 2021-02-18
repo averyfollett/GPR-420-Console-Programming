@@ -9,11 +9,11 @@
 // Sets default values
 AFPSCubeActor::AFPSCubeActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	CubeMesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'")).Object;
 
+	//Set up a mesh for this object that responds to physics and reacts to hits
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetStaticMesh(CubeMesh);
 	MeshComp->SetSimulatePhysics(true);
@@ -31,8 +31,10 @@ void AFPSCubeActor::BeginPlay()
 void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
+	//If this is hit by a special attack bullet
 	if (OtherActor->ActorHasTag("Special"))
 	{
+		//Get objects within a given radius of the impacted cube and destroy them
 		TArray<FOverlapResult> OutOverlaps;
 	
 		FCollisionObjectQueryParams QueryParams;
@@ -40,10 +42,11 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		QueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
 	
 		FCollisionShape CollShape;
-		CollShape.SetSphere(500.0f);
+		CollShape.SetSphere(500.0f); 
 	
 		GetWorld()->OverlapMultiByObjectType(OutOverlaps, GetActorLocation(), FQuat::Identity, QueryParams, CollShape);
 
+		//Destroy nearby objects
 		for (FOverlapResult Result : OutOverlaps)
 		{
 			AActor* Overlap = Result.GetActor();

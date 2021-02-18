@@ -30,9 +30,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AFPSMiniCubeActor> MiniCubeActor;
 
+	//The smaller cube spawned when this dies is set in the inspector
 	UPROPERTY(EditDefaultsOnly, Category = "Mini Cube")
 	TSubclassOf<AFPSMiniCubeActor> MiniCubeClass;
 
+	//Handle an impact. Responds by destroying this object and spawning four mini cubes
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
