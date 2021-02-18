@@ -34,6 +34,7 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	//If this is hit by a special attack bullet
 	if (OtherActor->ActorHasTag("Special"))
 	{
+
 		//Get objects within a given radius of the impacted cube and destroy them
 		TArray<FOverlapResult> OutOverlaps;
 	

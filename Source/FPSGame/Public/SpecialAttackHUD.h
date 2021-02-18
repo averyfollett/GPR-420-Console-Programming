@@ -14,9 +14,5 @@ UCLASS()
 class FPSGAME_API ASpecialAttackHUD : public AHUD
 {
 	GENERATED_BODY()
-
-public:
-	// Primary draw call for the HUD.
-	virtual void DrawHUD() override;
 	
 };
