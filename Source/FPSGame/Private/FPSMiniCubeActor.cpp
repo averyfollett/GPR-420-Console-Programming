@@ -2,6 +2,8 @@
 
 
 #include "FPSMiniCubeActor.h"
+
+#include "FPSProjectile.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -29,10 +31,11 @@ void AFPSMiniCubeActor::BeginPlay()
 void AFPSMiniCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit)
 {
-
 	//If this is hit by a special attack bullet
 	if (OtherActor->ActorHasTag("Special"))
 	{
+		AFPSProjectile * HitProjectile = Cast<AFPSProjectile>(OtherActor);
+		
 		//Get objects within a given radius of the impacted cube and destroy them
 		TArray<FOverlapResult> OutOverlaps;
 
@@ -50,15 +53,20 @@ void AFPSMiniCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		{
 			AActor* Overlap = Result.GetActor();
 
-			UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, Overlap->GetActorLocation());
+			UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, Overlap->GetActorLocation(),
+                FRotator::ZeroRotator, FVector(HitProjectile->GetSpecialExplosionSize()));
 
 			Overlap->Destroy();
 		}
+
+		UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, GetActorLocation(),
+                FRotator::ZeroRotator, FVector(HitProjectile->GetSpecialExplosionSize()));
+	}
+	else
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, GetActorLocation());
 	}
 
-	UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, GetActorLocation());
-
-	
 	Destroy();
 }
 

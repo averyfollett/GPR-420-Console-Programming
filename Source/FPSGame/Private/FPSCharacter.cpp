@@ -1,6 +1,9 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "FPSCharacter.h"
+
+#include <string>
+
 #include "FPSProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -29,6 +32,15 @@ AFPSCharacter::AFPSCharacter()
 	GunMeshComponent->SetupAttachment(Mesh1PComponent, "GripPoint");
 }
 
+void AFPSCharacter::Tick(float DeltaSeconds)
+{
+	if (bSpecialActive)
+	{
+		SpecialFireSize += DeltaSeconds;
+		UE_LOG(LogTemp, Log, TEXT("Size: %f"), SpecialFireSize);
+	}
+}
+
 
 void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -40,6 +52,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("MyRestart", IE_Pressed, this, &AFPSCharacter::MyRestart);
 
 	PlayerInputComponent->BindAction("ActivateProjectile", IE_Pressed, this, &AFPSCharacter::SetSpecialActive);
+	PlayerInputComponent->BindAction("ActivateProjectile", IE_Released, this, &AFPSCharacter::SetSpecialInactive);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
@@ -96,7 +109,8 @@ void AFPSCharacter::Fire()
 		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 		// spawn the projectile at the muzzle
-		GetWorld()->SpawnActor<AFPSProjectile>(SpecialProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		AFPSProjectile * Projectile = GetWorld()->SpawnActor<AFPSProjectile>(SpecialProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		Projectile->SetSpecialExplosionSize(SpecialFireSize);
 
 		SetSpecialInactive();
 	}
@@ -144,7 +158,7 @@ void AFPSCharacter::SetSpecialActive()
 	if (bSpecialFireAvailable)
 	{
 		bSpecialActive = true;
-		GetWorld()->GetTimerManager().SetTimer(SpecialFireTimerHandle, this, &AFPSCharacter::SetSpecialAvailable, SpecialFireTime, false);
+		
 		UE_LOG(LogTemp, Warning, TEXT("Special active and timer set"));
 	}
 }
@@ -154,6 +168,8 @@ void AFPSCharacter::SetSpecialInactive()
 	//Set special attacks off. Called after effectr is used
 	bSpecialActive = false;
 	bSpecialFireAvailable = false;
+	SpecialFireSize = 1.0f;
+	GetWorld()->GetTimerManager().SetTimer(SpecialFireTimerHandle, this, &AFPSCharacter::SetSpecialAvailable, SpecialFireTime, false);
 
 	UE_LOG(LogTemp, Warning, TEXT("Special not available"));
 }

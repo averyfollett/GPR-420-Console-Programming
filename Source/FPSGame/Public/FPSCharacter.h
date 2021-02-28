@@ -37,6 +37,9 @@ protected:
 public:
 	AFPSCharacter();
 
+	UFUNCTION()
+	virtual void Tick(float DeltaSeconds) override;
+
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category="Projectile")
 	TSubclassOf<AFPSProjectile> ProjectileClass;
@@ -81,6 +84,7 @@ protected:
 	FTimerHandle SpecialFireTimerHandle;
 
 	float SpecialFireTime = 3.0f;
+	float SpecialFireSize = 1.0f;
 
 	//Handles Restarting a level
 	void MyRestart();

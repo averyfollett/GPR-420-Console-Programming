@@ -6,18 +6,26 @@
 #include "GameFramework/Actor.h"
 #include "FPSProjectile.generated.h"
 
-
 class UProjectileMovementComponent;
 class USphereComponent;
-
 
 UCLASS()
 class AFPSProjectile : public AActor
 {
 	GENERATED_BODY()
 
-protected:
+public:
+	void SetSpecialExplosionSize(const float Size)
+	{
+		SpecialExplosionSize = Size;
+	}
 
+	float GetSpecialExplosionSize() const
+	{
+		return SpecialExplosionSize;
+	}
+
+protected:
 	/** Sphere collision component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Projectile")
 	USphereComponent* CollisionComp;
@@ -26,13 +34,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY()
+	float SpecialExplosionSize;
+
 public:
-
 	AFPSProjectile();
-
-	/** called when projectile hits something */
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	/** Returns CollisionComp subobject **/
 	USphereComponent* GetCollisionComp() const { return CollisionComp; }

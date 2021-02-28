@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "FPSCubeActor.h"
 
 #include "FPSMiniCubeActor.h"
+#include "FPSProjectile.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -34,7 +34,8 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	//If this is hit by a special attack bullet
 	if (OtherActor->ActorHasTag("Special"))
 	{
-
+		AFPSProjectile * HitProjectile = Cast<AFPSProjectile>(OtherActor);
+		
 		//Get objects within a given radius of the impacted cube and destroy them
 		TArray<FOverlapResult> OutOverlaps;
 	
@@ -51,14 +52,15 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		for (FOverlapResult Result : OutOverlaps)
 		{
 			AActor* Overlap = Result.GetActor();
-
 			
-			UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, Overlap->GetActorLocation());
+			UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, Overlap->GetActorLocation(),
+				FRotator::ZeroRotator, FVector(HitProjectile->GetSpecialExplosionSize()));
 
 			Overlap->Destroy();
 		}
 
-		UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, GetActorLocation());
+		UGameplayStatics::SpawnEmitterAtLocation(this, Explosion, GetActorLocation(),
+			FRotator::ZeroRotator, FVector(HitProjectile->GetSpecialExplosionSize()));
 	}
 	else
 	{
@@ -66,7 +68,6 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		const FRotator Rotation = GetActorRotation();
 		const FActorSpawnParameters SpawnParameters;
 
-		// GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
 		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
 		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(-1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
 		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(0.0f, 1.0f, 0.0f), Rotation, SpawnParameters);
