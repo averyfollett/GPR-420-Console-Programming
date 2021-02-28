@@ -48,7 +48,7 @@ void AFPSGameMode::GetMostWantedData()
 }
 
 void AFPSGameMode::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) {
-	
+	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Got Data");
 
 	//Create a pointer to hold the json srialized data
 	TSharedPtr<FJsonObject> JsonObject;
@@ -72,23 +72,29 @@ void AFPSGameMode::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr 
 			auto criminal = objArray[criminalIndex]->AsObject();
 
 			FString eyeColor = criminal->GetStringField("eyes");
+			int weight_max = criminal->GetNumberField("weight_max");
+			int weight_min = criminal->GetNumberField("weight_min");
+			int height_max = criminal->GetNumberField("height_max");
+
+			FString sex = criminal->GetStringField("sex");
 
 			TArray<TSharedPtr<FJsonValue>> subjectArray = criminal->GetArrayField("subjects");
+			
+			
 			FString subject;
+
+			
 
 			if(subjectArray.Num() > 0)
 				subjectArray[0]->TryGetString(subject);
 
-			if (subject != "Kidnappings and Missing Persons" && subject != "ViCAP Unidentified Persons" && subject != "Seeking Information") {
+			if (subject != "Kidnappings and Missing Persons") {
 				if (MaterialsMap.Contains(eyeColor)) {
 					//Eye color exists in map
 					cube->SetColor(MaterialsMap[eyeColor]);
 					++ActorItr;
 				}
 				
-			}
-			else {
-				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Skipping victim");
 			}
 			
 			j++;

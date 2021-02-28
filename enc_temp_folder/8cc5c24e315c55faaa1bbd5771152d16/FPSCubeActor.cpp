@@ -100,6 +100,8 @@ void AFPSCubeActor::Tick(float DeltaTime)
 
 void AFPSCubeActor::SetColor(UMaterialInterface * color) {
 
+	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Calling set color");
+
 	MeshComp->SetMaterial(0, color);
 	Material = color;
 }
