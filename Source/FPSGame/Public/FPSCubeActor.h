@@ -42,6 +42,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 		UParticleSystem* Explosion;
 
+	UFUNCTION()
+	void PlayerCloseWarning(FVector PlayerLocation);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

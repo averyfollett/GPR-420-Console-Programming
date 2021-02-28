@@ -15,6 +15,8 @@ class USoundBase;
 class UAnimSequence;
 class AFPSBombActor;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerWarningDelegate, FVector, PlayerLocation);
+
 UCLASS()
 class AFPSCharacter final : public ACharacter
 {
@@ -57,6 +59,9 @@ public:
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	UAnimSequence* FireAnimation;
+
+	UPROPERTY(BlueprintAssignable)
+	FPlayerWarningDelegate PlayerWarningDelegate;
 
 protected:
 	

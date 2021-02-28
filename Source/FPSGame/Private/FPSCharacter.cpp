@@ -82,6 +82,8 @@ void AFPSCharacter::DelegateRestart(float currentTime) {
 
 void AFPSCharacter::Fire()
 {
+	PlayerWarningDelegate.Broadcast(GetActorLocation());
+	
 	// try and fire a projectile
 	if (!bSpecialActive && ProjectileClass)
 	{
