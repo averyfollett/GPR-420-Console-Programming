@@ -83,6 +83,10 @@ void AFPSMiniCubeActor::PlayerCloseWarning(FVector PlayerLocation)
 	}
 }
 
+void AFPSMiniCubeActor::SetMaterial(UMaterialInterface* material) {
+	MeshComp->SetMaterial(0, material);
+}
+
 // Called every frame
 void AFPSMiniCubeActor::Tick(float DeltaTime)
 {

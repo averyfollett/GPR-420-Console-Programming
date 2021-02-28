@@ -72,10 +72,11 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 		const FRotator Rotation = GetActorRotation();
 		const FActorSpawnParameters SpawnParameters;
 
-		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
-		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(-1.0f, 0.0f, 0.0f), Rotation, SpawnParameters);
-		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(0.0f, 1.0f, 0.0f), Rotation, SpawnParameters);
-		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(0.0f, -1.0f, 0.0f), Rotation, SpawnParameters);
+		// GetWorld()->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, ActorSpawnParams);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(1.0f, 0.0f, 0.0f), Rotation, SpawnParameters)->SetMaterial(Material);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(-1.0f, 0.0f, 0.0f), Rotation, SpawnParameters)->SetMaterial(Material);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(0.0f, 1.0f, 0.0f), Rotation, SpawnParameters)->SetMaterial(Material);
+		GetWorld()->SpawnActor<AFPSMiniCubeActor>(MiniCubeClass, Location + FVector(0.0f, -1.0f, 0.0f), Rotation, SpawnParameters)->SetMaterial(Material);
 	}
 	
 	Destroy();
@@ -97,3 +98,10 @@ void AFPSCubeActor::Tick(float DeltaTime)
 
 }
 
+void AFPSCubeActor::SetColor(UMaterialInterface * color) {
+
+	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, "Calling set color");
+
+	MeshComp->SetMaterial(0, color);
+	Material = color;
+}
