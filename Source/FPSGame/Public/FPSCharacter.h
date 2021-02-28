@@ -82,6 +82,13 @@ protected:
 
 	float SpecialFireTime = 3.0f;
 
+	//Handles Restarting a level
+	void MyRestart();
+
+	//Delgate restart function
+	UFUNCTION()
+	void DelegateRestart(float currentTime);
+
 public:
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1PComponent; }

@@ -37,6 +37,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
+	PlayerInputComponent->BindAction("MyRestart", IE_Pressed, this, &AFPSCharacter::MyRestart);
+
 	PlayerInputComponent->BindAction("ActivateProjectile", IE_Pressed, this, &AFPSCharacter::SetSpecialActive);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
@@ -46,6 +48,24 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
+void AFPSCharacter::MyRestart() {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Restart game! in 5 seconds"));
+	FTimerDelegate TimerDel;
+
+	FTimerHandle TimerHandle;
+	float Time = GetWorld()->TimeSeconds;
+
+	TimerDel.BindUFunction(this, FName("DelegateRestart"), Time);
+	
+
+	GetWorldTimerManager().SetTimer(TimerHandle, TimerDel, 5.0f, false);
+
+}
+
+void AFPSCharacter::DelegateRestart(float currentTime) {
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Time: %f"), currentTime));
+	GetWorld()->GetFirstPlayerController()->RestartLevel();
+}
 
 void AFPSCharacter::Fire()
 {
