@@ -74,6 +74,8 @@ protected:
 	/** Handles strafing movement, left and right */
 	void MoveRight(float Val);
 
+	virtual void Jump() override;
+
 	bool bSpecialActive = false;
 
 	bool bSpecialFireAvailable = true;
@@ -106,4 +108,3 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraComponent; }
 
 };
-

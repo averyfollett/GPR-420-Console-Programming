@@ -3,6 +3,8 @@
 
 #include "FPSMiniCubeActor.h"
 
+
+#include "FPSCharacter.h"
 #include "FPSProjectile.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -25,7 +27,9 @@ AFPSMiniCubeActor::AFPSMiniCubeActor()
 void AFPSMiniCubeActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	AFPSCharacter * Char = Cast<AFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	Char->PlayerWarningDelegate.AddDynamic(this, &AFPSMiniCubeActor::PlayerCloseWarning);
 }
 
 void AFPSMiniCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -68,6 +72,15 @@ void AFPSMiniCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 	}
 
 	Destroy();
+}
+
+void AFPSMiniCubeActor::PlayerCloseWarning(FVector PlayerLocation)
+{
+	//UE_LOG(LogTemp, Log, TEXT("Got Dynamic Delegate message!"));
+	if (FVector::Dist(GetActorLocation(), PlayerLocation) < 1500.0f)
+	{
+		MeshComp->AddImpulse(FVector(0.0f, 0.0f, 500.0f), NAME_None, true);
+	}
 }
 
 // Called every frame

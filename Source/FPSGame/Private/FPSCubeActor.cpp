@@ -83,7 +83,11 @@ void AFPSCubeActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 
 void AFPSCubeActor::PlayerCloseWarning(FVector PlayerLocation)
 {
-	UE_LOG(LogTemp, Log, TEXT("Got Dynamic Delegate message!"));
+	//UE_LOG(LogTemp, Log, TEXT("Got Dynamic Delegate message!"));
+	if (FVector::Dist(GetActorLocation(), PlayerLocation) < 1500.0f)
+	{
+		MeshComp->AddImpulse(FVector(0.0f, 0.0f, 500.0f), NAME_None, true);
+	}
 }
 
 // Called every frame

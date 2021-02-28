@@ -47,7 +47,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFPSCharacter::Jump);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPSCharacter::Fire);
 	PlayerInputComponent->BindAction("MyRestart", IE_Pressed, this, &AFPSCharacter::MyRestart);
 
@@ -82,8 +82,6 @@ void AFPSCharacter::DelegateRestart(float currentTime) {
 
 void AFPSCharacter::Fire()
 {
-	PlayerWarningDelegate.Broadcast(GetActorLocation());
-	
 	// try and fire a projectile
 	if (!bSpecialActive && ProjectileClass)
 	{
@@ -153,6 +151,12 @@ void AFPSCharacter::MoveRight(const float Val)
 		// add movement in that direction
 		AddMovementInput(GetActorRightVector(), Val);
 	}
+}
+
+void AFPSCharacter::Jump()
+{
+	ACharacter::Jump();
+	PlayerWarningDelegate.Broadcast(GetActorLocation());
 }
 
 void AFPSCharacter::SetSpecialActive()
